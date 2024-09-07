@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.cafe.gccoffee.model.mapper.OrderMapper">
+
+    <insert id="insertOrder">
+        INSERT INTO ORDERS(ORDER_ID, EMAIL, ADDRESS, POSTCODE, ORDER_STATUS, CREATED_AT)
+        VALUES (UNHEX(REPLACE(#{id},"-","")), #{email}, #{address}, #{postcode}, "PENDING", NOW())
+    </insert>
+
+    <insert id="insertOrderItem" keyProperty="id" keyColumn="id">
+        INSERT INTO ORDER_ITEMS(ORDER_ID, PRODUCT_ID, CATEGORY, PRICE, QUANTITY, CREATED_AT)
+        VALUES (UNHEX(REPLACE(#{orderId},"-","")),UNHEX(REPLACE(#{productId},"-","")), #{category}, #{price}, #{quantity}, NOW())
+    </insert>
+</mapper>
