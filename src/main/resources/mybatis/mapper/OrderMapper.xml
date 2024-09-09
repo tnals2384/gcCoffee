@@ -7,13 +7,14 @@
 
     <insert id="insertOrder">
         INSERT INTO ORDERS(ORDER_ID, EMAIL, ADDRESS, POSTCODE, ORDER_STATUS, CREATED_AT)
-        VALUES (UNHEX(REPLACE(#{id},"-","")), #{email}, #{address}, #{postcode}, "PENDING", NOW())
+        VALUES (UNHEX(REPLACE(#{id},"-","")), #{email}, #{address}, #{postcode}, 'PENDING', NOW())
     </insert>
 
     <insert id="insertOrderItem" keyProperty="id" keyColumn="id">
         INSERT INTO ORDER_ITEMS(ORDER_ID, PRODUCT_ID, CATEGORY, PRICE, QUANTITY, CREATED_AT)
         VALUES (UNHEX(REPLACE(#{orderId},"-","")),UNHEX(REPLACE(#{productId},"-","")), #{category}, #{price}, #{quantity}, NOW())
     </insert>
+
     <select id="getOrderList" resultType="org.cafe.gccoffee.model.dto.order.OrderResponse">
         SELECT BIN_TO_UUID(O.ORDER_ID) as id,
                O.EMAIL,
@@ -31,7 +32,23 @@
         ORDER BY O.CREATED_AT DESC
         LIMIT #{size} OFFSET #{offset}
     </select>
+
     <select id="getTotalOrderCount" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM ORDERS
     </select>
+
+    <select id="getPendingOrderIdList" resultType="org.cafe.gccoffee.model.dto.order.OrderIdResponse">
+        SELECT BIN_TO_UUID(ORDER_ID) as orderId FROM ORDERS
+        WHERE ORDER_STATUS = 'PENDING' AND CREATED_AT BETWEEN
+            DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%m-%dT14:00:00') AND
+            DATE_FORMAT(NOW(), '%Y-%m-%dT14:00:00')
+    </select>
+
+    <update id="startShippingForPendingOrders">
+        UPDATE ORDERS SET ORDER_STATUS = 'SHIPPING' WHERE ORDER_STATUS = 'PENDING'
+                                                      AND CREATED_AT BETWEEN
+                DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%m-%dT14:00:00') AND
+                DATE_FORMAT(NOW(), '%Y-%m-%dT14:00:00')
+
+    </update>
 </mapper>

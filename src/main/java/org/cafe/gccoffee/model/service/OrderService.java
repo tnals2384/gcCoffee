@@ -61,7 +61,15 @@ public class OrderService {
         int totalCount = orderMapper.getTotalOrderCount();
 
         return PageUtils.pageUtilsOf(orderList, page, size, totalCount);
-
     }
 
+
+    @Transactional
+    public List<OrderIdResponse> startShippingForPendingOrders() {
+        List<OrderIdResponse> pendingOrderList = orderMapper.getPendingOrderIdList();
+
+        orderMapper.startShippingForPendingOrders();
+
+        return pendingOrderList;
+    }
 }

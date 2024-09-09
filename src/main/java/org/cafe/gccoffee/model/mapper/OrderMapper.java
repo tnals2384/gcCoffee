@@ -1,11 +1,13 @@
 package org.cafe.gccoffee.model.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.cafe.gccoffee.model.dto.order.OrderIdResponse;
 import org.cafe.gccoffee.model.dto.order.OrderResponse;
 import org.cafe.gccoffee.model.vo.Order;
 import org.cafe.gccoffee.model.vo.OrderItem;
 
 import java.util.List;
+import java.util.UUID;
 
 @Mapper
 public interface OrderMapper {
@@ -13,4 +15,6 @@ public interface OrderMapper {
     void insertOrderItem(OrderItem orderItem);
     List<OrderResponse> getOrderList(int offset, int size);
     int getTotalOrderCount();
+    List<OrderIdResponse> getPendingOrderIdList();
+    void startShippingForPendingOrders();
 }
