@@ -20,7 +20,7 @@ public class AdminProductController {
         return BaseResponse.onSuccess(productService.createProduct(productCreateRequest));
     }
 
-    @PostMapping("/{productId}")
+    @PutMapping("/{productId}")
     public BaseResponse<ProductIdResponse> createProduct(@PathVariable("productId") UUID productId,
                                                          @RequestBody ProductCreateRequest productCreateRequest) {
         return BaseResponse.onSuccess(productService.updateProduct(productId, productCreateRequest));
