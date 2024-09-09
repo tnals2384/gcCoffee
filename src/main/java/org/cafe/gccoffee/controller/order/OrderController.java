@@ -4,12 +4,14 @@ package org.cafe.gccoffee.controller.order;
 import lombok.RequiredArgsConstructor;
 import org.cafe.gccoffee.model.dto.order.OrderCreateRequest;
 import org.cafe.gccoffee.model.dto.order.OrderIdResponse;
+import org.cafe.gccoffee.model.dto.order.OrderProductEditRequest;
+import org.cafe.gccoffee.model.dto.order.OrderUserEditRequest;
 import org.cafe.gccoffee.model.service.OrderService;
 import org.cafe.gccoffee.common.BaseResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,4 +24,15 @@ public class OrderController {
         return BaseResponse.onSuccess(orderService.createOrder(orderCreateRequest));
     }
 
+    @PutMapping("/{orderId}/product")
+    public BaseResponse<OrderIdResponse> editOrderProduct(@PathVariable("orderId") UUID orderId,
+                                                        @RequestBody List<OrderProductEditRequest> orderProductEditRequestList) {
+        return BaseResponse.onSuccess(orderService.editOrderProduct(orderId, orderProductEditRequestList));
+    }
+
+    @PutMapping("/{orderId}/user")
+    public BaseResponse<OrderIdResponse> editOrderUser(@PathVariable("orderId") UUID orderId,
+                                                       @RequestBody OrderUserEditRequest orderUserEditRequest) {
+        return BaseResponse.onSuccess(orderService.editOrderUser(orderId, orderUserEditRequest));
+    }
 }

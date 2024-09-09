@@ -21,7 +21,7 @@ public class AdminProductController {
     }
 
     @PutMapping("/{productId}")
-    public BaseResponse<ProductIdResponse> createProduct(@PathVariable("productId") UUID productId,
+    public BaseResponse<ProductIdResponse> updateProduct(@PathVariable("productId") UUID productId,
                                                          @RequestBody ProductCreateRequest productCreateRequest) {
         return BaseResponse.onSuccess(productService.updateProduct(productId, productCreateRequest));
     }

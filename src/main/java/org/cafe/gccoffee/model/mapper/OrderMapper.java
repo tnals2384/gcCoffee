@@ -7,6 +7,7 @@ import org.cafe.gccoffee.model.vo.Order;
 import org.cafe.gccoffee.model.vo.OrderItem;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Mapper
@@ -17,4 +18,7 @@ public interface OrderMapper {
     int getTotalOrderCount();
     List<OrderIdResponse> getPendingOrderIdList();
     void startShippingForPendingOrders();
+    Optional<Order> getOrder(UUID orderId);
+    Optional<OrderItem> getOrderItem(int orderItemId);
+
 }

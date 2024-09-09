@@ -51,4 +51,24 @@
                 DATE_FORMAT(NOW(), '%Y-%m-%dT14:00:00')
 
     </update>
+
+    <select id="getOrder" resultType="org.cafe.gccoffee.model.vo.Order">
+        SELECT BIN_TO_UUID(ORDER_ID) as id,
+               EMAIL,
+               ADDRESS,
+               POSTCODE,
+               ORDER_STATUS as orderStatus,
+               CREATED_AT as createdAt,
+               UPDATED_AT as updatedAt
+        FROM ORDERS WHERE ORDER_ID = UNHEX(REPLACE(#{orderId},"-",""))
+    </select>
+    <select id="getOrderItem" resultType="org.cafe.gccoffee.model.vo.OrderItem">
+        SELECT SEQ,
+               ORDER_ID as orderId,
+               PRODUCT_ID as productId,
+               PRICE,
+               QUANTITY
+        FROM ORDER_ITEMS WHERE seq = #{orderItemId}
+
+    </select>
 </mapper>
