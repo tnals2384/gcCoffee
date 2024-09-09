@@ -19,6 +19,7 @@
         WHERE PRODUCT_ID = UNHEX(REPLACE(#{id}, "-", ""))
 
     </update>
+
     <delete id="deleteProduct" parameterType="java.util.UUID">
         DELETE
         FROM PRODUCTS
@@ -35,6 +36,7 @@
         FROM PRODUCTS
         WHERE PRODUCT_ID = UNHEX(REPLACE(#{id}, "-", ""))
     </select>
+
     <select id="getProductList" resultType="org.cafe.gccoffee.model.dto.product.ProductResponse">
         SELECT BIN_TO_UUID(PRODUCT_ID) as id,
                PRODUCT_NAME            as productName,
@@ -47,10 +49,12 @@
             LIMIT #{size}
         OFFSET #{offset}
     </select>
+
     <select id="getTotalProductCount" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM PRODUCTS
     </select>
+
     <select id="getProductListWithCategory" resultType="org.cafe.gccoffee.model.dto.product.ProductResponse">
         SELECT BIN_TO_UUID(PRODUCT_ID) as id,
                PRODUCT_NAME            as productName,
@@ -64,6 +68,7 @@
             LIMIT #{size}
         OFFSET #{offset}
     </select>
+
     <select id="getCategoryProductCount" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM PRODUCTS

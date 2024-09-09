@@ -112,7 +112,6 @@ public class OrderService {
     }
 
     //OrderItem 생성
-
     private void addOrderItem(UUID orderId, OrderItemRequest itemRequest) {
         Product product = productService.getProduct(itemRequest.getProductId());
         int quantity = itemRequest.getQuantity();

@@ -15,6 +15,7 @@
         VALUES (UNHEX(REPLACE(#{orderId}, "-", "")), UNHEX(REPLACE(#{productId}, "-", "")), #{category}, #{price},
                 #{quantity}, NOW())
     </insert>
+
     <delete id="deleteOrderItemsByOrderId">
         DELETE
         FROM ORDER_ITEMS
@@ -61,7 +62,6 @@
           AND CREATED_AT BETWEEN
             DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%m-%dT14:00:00') AND
             DATE_FORMAT(NOW(), '%Y-%m-%dT14:00:00')
-
     </update>
 
     <select id="getOrder" resultType="org.cafe.gccoffee.model.vo.Order">

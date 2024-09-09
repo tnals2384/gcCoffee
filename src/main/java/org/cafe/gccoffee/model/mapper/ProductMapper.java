@@ -17,6 +17,7 @@ public interface ProductMapper {
     List<ProductResponse> getProductListWithCategory(String category, int offset, int size);
 
     int getTotalProductCount();
+
     int getCategoryProductCount(String category);
 
     void insertProduct(Product product);
