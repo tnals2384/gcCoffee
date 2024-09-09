@@ -1,13 +1,19 @@
 package org.cafe.gccoffee.model.service;
 
 import lombok.RequiredArgsConstructor;
+import org.cafe.gccoffee.model.dto.product.ProductResponse;
+import org.cafe.gccoffee.model.dto.product.ProductResponsePage;
 import org.cafe.gccoffee.model.vo.Product;
 import org.cafe.gccoffee.model.dto.product.ProductCreateRequest;
 import org.cafe.gccoffee.model.dto.product.ProductIdResponse;
 import org.cafe.gccoffee.model.mapper.ProductMapper;
+import org.cafe.gccoffee.util.PageUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -49,8 +55,30 @@ public class ProductService {
         return new ProductIdResponse(product.getId());
     }
 
+    public PageUtils<ProductResponse> getProductList(int page, int size) {
+        PageUtils.checkPagingRequest(page, size);
+
+        int offset = page*size;
+        List<ProductResponse> productList = productMapper.getProductList(offset, size);
+        int totalCount = productMapper.getTotalProductCount();
+
+        return PageUtils.pageUtilsOf(productList, page, size, totalCount);
+
+    }
+
+    public PageUtils<ProductResponse> getProductListWithCategory(String category, int page, int size) {
+        PageUtils.checkPagingRequest(page, size);
+
+        int offset = page*size;
+        List<ProductResponse> productList = productMapper.getProductListWithCategory(category, offset, size);
+        int totalCount = productMapper.getCategoryProductCount(category);
+
+        return PageUtils.pageUtilsOf(productList, page, size, totalCount);
+    }
+
     public Product getProduct(UUID productId) {
         return productMapper.getProduct(productId).orElseThrow(
-                ()-> new RuntimeException("product를 찾을 수 없습니다."));
+                ()-> new RuntimeException("Product를 찾을 수 없습니다."));
     }
+
 }
