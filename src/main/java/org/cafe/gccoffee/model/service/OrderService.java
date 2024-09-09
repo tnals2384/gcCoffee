@@ -25,6 +25,7 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final ProductService productService;
 
+    //주문 생성
     @Transactional
     public OrderIdResponse createOrder(OrderCreateRequest request) {
         Order order = Order.orderOf(request.getEmail(), request.getAddress(), request.getPostcode());
@@ -36,11 +37,52 @@ public class OrderService {
 
     }
 
+    //주문 목록 페이징 조회
+    public PageUtils<OrderResponse> getOrderList(int page, int size) {
+        PageUtils.checkPagingRequest(page, size);
+        int offset = PageUtils.calculateOffset(page, size);
+
+        List<OrderResponse> orderList = orderMapper.getOrderList(offset, size);
+        int totalCount = orderMapper.getTotalOrderCount();
+
+        return PageUtils.pageUtilsOf(orderList, page, size, totalCount);
+    }
+
+    //배송 시작 일괄 처리
+    @Transactional
+    public List<OrderIdResponse> startShippingForPendingOrders() {
+        List<OrderIdResponse> pendingOrderList = orderMapper.getPendingOrderIdList();
+
+        orderMapper.startShippingForPendingOrders();
+        return pendingOrderList;
+    }
+
+    //주문 메뉴 수정하기
+    @Transactional
+    public OrderIdResponse editOrderProduct(UUID orderId, List<OrderProductEditRequest> list) {
+        for (OrderProductEditRequest request : list) {
+            //1. orderItem찾기
+            //OrderItem orderItem = getOrderItem(orderId, request.getProductId());
+            //2-1. db에 없으면 새로 저장
+            //2-2. db에 있으면 quantity 수정
+            //2-3. db에 있지만 request quantity가 0 이면 orderItem 삭제
+        }
+    }
+
+    //주문한 사용자 정보 수정하기
+    @Transactional
+    public OrderIdResponse editOrderUser(UUID orderId, OrderUserEditRequest orderUserEditRequest) {
+        //email, address, postcode 수정
+    }
+
+    //OrderItems 생성
     private void addOrderItems(UUID orderId, List<OrderItemRequest> orderItems) {
         for (OrderItemRequest itemRequest : orderItems) {
             addOrderItem(orderId, itemRequest);
         }
     }
+
+    //OrderItem 생성
 
     private void addOrderItem(UUID orderId, OrderItemRequest itemRequest) {
         Product product = productService.getProduct(itemRequest.getProductId());
@@ -55,41 +97,6 @@ public class OrderService {
         );
 
         orderMapper.insertOrderItem(orderItem);
-    }
-
-    public PageUtils<OrderResponse> getOrderList(int page, int size) {
-        PageUtils.checkPagingRequest(page, size);
-        int offset = PageUtils.calculateOffset(page, size);
-
-        List<OrderResponse> orderList = orderMapper.getOrderList(offset, size);
-        int totalCount = orderMapper.getTotalOrderCount();
-
-        return PageUtils.pageUtilsOf(orderList, page, size, totalCount);
-    }
-
-
-    @Transactional
-    public List<OrderIdResponse> startShippingForPendingOrders() {
-        List<OrderIdResponse> pendingOrderList = orderMapper.getPendingOrderIdList();
-
-        orderMapper.startShippingForPendingOrders();
-        return pendingOrderList;
-    }
-
-    @Transactional
-    public OrderIdResponse editOrderProduct(UUID orderId, List<OrderProductEditRequest> list) {
-        for (OrderProductEditRequest request : list) {
-            //1. orderItem찾기
-            //OrderItem orderItem = getOrderItem(orderId, request.getProductId());
-            //2-1. db에 없으면 새로 저장
-            //2-2. db에 있으면 quantity 수정
-            //2-3. db에 있지만 request quantity가 0 이면 orderItem 삭제
-        }
-    }
-
-    @Transactional
-    public OrderIdResponse editOrderUser(UUID orderId, OrderUserEditRequest orderUserEditRequest) {
-        //email, address, postcode 수정
     }
 
     private Order getOrder(UUID orderId) {

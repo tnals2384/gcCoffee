@@ -20,6 +20,7 @@ public class ProductService {
 
     private final ProductMapper productMapper;
 
+    //상품 생성
     @Transactional
     public ProductIdResponse createProduct(ProductCreateRequest request) {
         Product product = Product.productOf(
@@ -33,6 +34,7 @@ public class ProductService {
         return new ProductIdResponse(product.getId());
     }
 
+    //상품 수정
     @Transactional
     public ProductIdResponse updateProduct(UUID productId, ProductCreateRequest request) {
         validateProductExists(productId);
@@ -47,6 +49,7 @@ public class ProductService {
         return new ProductIdResponse(productId);
     }
 
+    //상품 삭제
     @Transactional
     public ProductIdResponse deleteProduct(UUID productId) {
         validateProductExists(productId);
@@ -55,6 +58,7 @@ public class ProductService {
         return new ProductIdResponse(productId);
     }
 
+    //상품 목록 페이징 조회
     public PageUtils<ProductResponse> getProductList(int page, int size) {
         PageUtils.checkPagingRequest(page, size);
         int offset = PageUtils.calculateOffset(page, size);
@@ -66,6 +70,7 @@ public class ProductService {
 
     }
 
+    //상품 목록 카테고리로 페이징 조회
     public PageUtils<ProductResponse> getProductListWithCategory(String category, int page, int size) {
         PageUtils.checkPagingRequest(page, size);
         int offset = PageUtils.calculateOffset(page, size);
