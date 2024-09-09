@@ -14,4 +14,22 @@
         INSERT INTO ORDER_ITEMS(ORDER_ID, PRODUCT_ID, CATEGORY, PRICE, QUANTITY, CREATED_AT)
         VALUES (UNHEX(REPLACE(#{orderId},"-","")),UNHEX(REPLACE(#{productId},"-","")), #{category}, #{price}, #{quantity}, NOW())
     </insert>
+    <select id="getOrderList" resultType="org.cafe.gccoffee.model.dto.order.OrderResponse">
+        SELECT BIN_TO_UUID(O.ORDER_ID) as id,
+               O.EMAIL,
+               O.ADDRESS,
+               O.POSTCODE,
+               O.ORDER_STATUS as orderStatus,
+               P.PRODUCT_NAME as productName,
+               OI.QUANTITY,
+               OI.PRICE as totalPrice
+        FROM ORDERS O
+        INNER JOIN ORDER_ITEMS OI ON BIN_TO_UUID(O.ORDER_ID) = BIN_TO_UUID(OI.ORDER_ID)
+        INNER JOIN PRODUCTS P ON BIN_TO_UUID(OI.PRODUCT_ID) = BIN_TO_UUID(P.PRODUCT_ID)
+        ORDER BY O.CREATED_AT DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+    <select id="getTotalOrderCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM ORDERS
+    </select>
 </mapper>

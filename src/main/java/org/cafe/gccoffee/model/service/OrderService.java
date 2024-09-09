@@ -2,10 +2,12 @@ package org.cafe.gccoffee.model.service;
 
 import lombok.RequiredArgsConstructor;
 import org.cafe.gccoffee.model.dto.order.*;
+import org.cafe.gccoffee.model.dto.product.ProductResponse;
 import org.cafe.gccoffee.model.vo.Product;
 import org.cafe.gccoffee.model.mapper.OrderMapper;
 import org.cafe.gccoffee.model.vo.Order;
 import org.cafe.gccoffee.model.vo.OrderItem;
+import org.cafe.gccoffee.util.PageUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +49,17 @@ public class OrderService {
             orderMapper.insertOrderItem(orderItem);
 
         }
+    }
+
+    public PageUtils<OrderResponse> getOrderList(int page, int size) {
+        PageUtils.checkPagingRequest(page, size);
+
+        int offset = page*size;
+        List<OrderResponse> orderList = orderMapper.getOrderList(offset, size);
+        int totalCount = orderMapper.getTotalOrderCount();
+
+        return PageUtils.pageUtilsOf(orderList, page, size, totalCount);
+
     }
 
 }

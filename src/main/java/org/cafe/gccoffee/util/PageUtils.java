@@ -1,10 +1,13 @@
 package org.cafe.gccoffee.util;
 
 import lombok.Builder;
+import lombok.Getter;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class PageUtils<T> {
     private List<T> list = new ArrayList<>();
     private int page;

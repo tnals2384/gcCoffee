@@ -8,7 +8,6 @@ import java.util.UUID;
 
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class OrderItem {
     private int id;
