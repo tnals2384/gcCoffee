@@ -41,6 +41,13 @@ public class ProductService {
         return new ProductIdResponse(product.getId());
     }
 
+    @Transactional
+    public ProductIdResponse deleteProduct(UUID productId) {
+        Product product = getProduct(productId);
+
+        productMapper.deleteProduct(productId);
+        return new ProductIdResponse(product.getId());
+    }
 
     public Product getProduct(UUID productId) {
         return productMapper.getProduct(productId).orElseThrow(

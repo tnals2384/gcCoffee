@@ -1,4 +1,4 @@
-package org.cafe.gccoffee.model.dto;
+package org.cafe.gccoffee.model.vo;
 
 
 import lombok.Getter;

@@ -26,4 +26,9 @@ public class AdminProductController {
         return BaseResponse.onSuccess(productService.updateProduct(productId, productCreateRequest));
     }
 
+    @DeleteMapping("/{productId}")
+    public BaseResponse<ProductIdResponse> deleteProduct(@PathVariable("productId") UUID productId) {
+        return BaseResponse.onSuccess(productService.deleteProduct(productId));
+    }
+
 }

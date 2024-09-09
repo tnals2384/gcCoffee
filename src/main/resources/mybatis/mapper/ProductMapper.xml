@@ -10,9 +10,12 @@
     </insert>
     <update id="updateProduct" parameterType="org.cafe.gccoffee.model.vo.Product">
         UPDATE PRODUCTS SET PRODUCT_NAME=#{productName}, CATEGORY=#{category}, PRICE=#{price}, DESCRIPTION=#{description}, UPDATED_AT=NOW()
-            WHERE PRODUCT_ID=#{id}
+            WHERE PRODUCT_ID=UNHEX(REPLACE(#{id},"-",""))
 
     </update>
+    <delete id="deleteProduct" parameterType="java.util.UUID">
+        DELETE FROM PRODUCTS WHERE PRODUCT_ID=UNHEX(REPLACE(#{id},"-",""))
+    </delete>
 
     <select id="getProduct" resultType="org.cafe.gccoffee.model.vo.Product">
         SELECT BIN_TO_UUID(PRODUCT_ID) as id,
