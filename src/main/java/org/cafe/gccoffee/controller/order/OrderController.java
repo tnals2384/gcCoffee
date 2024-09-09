@@ -19,17 +19,26 @@ import java.util.UUID;
 public class OrderController {
     private final OrderService orderService;
 
-    @PostMapping()
+    /**
+     RQ-008 : 주문하기
+     */
+    @PostMapping
     public BaseResponse<OrderIdResponse> createOrder(@RequestBody OrderCreateRequest orderCreateRequest) {
         return BaseResponse.onSuccess(orderService.createOrder(orderCreateRequest));
     }
 
+    /**
+     RQ-009 : 주문 메뉴 수정하기
+     */
     @PutMapping("/{orderId}/product")
     public BaseResponse<OrderIdResponse> editOrderProduct(@PathVariable("orderId") UUID orderId,
                                                         @RequestBody List<OrderProductEditRequest> orderProductEditRequestList) {
         return BaseResponse.onSuccess(orderService.editOrderProduct(orderId, orderProductEditRequestList));
     }
 
+    /**
+     RQ-010 : 주문 사용자 정보 수정하기
+     */
     @PutMapping("/{orderId}/user")
     public BaseResponse<OrderIdResponse> editOrderUser(@PathVariable("orderId") UUID orderId,
                                                        @RequestBody OrderUserEditRequest orderUserEditRequest) {

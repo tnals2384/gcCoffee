@@ -18,12 +18,18 @@ public class AdminOrderController {
 
     private final OrderService orderService;
 
+    /**
+     RQ-004 : 전체 주문 목록 조회
+     */
     @GetMapping
     public BaseResponse<PageUtils<OrderResponse>> getOrder(@RequestParam("page") int page, @RequestParam("size") int size) {
         return BaseResponse.onSuccess(orderService.getOrderList(page, size));
     }
 
-    @PostMapping()
+    /**
+     RQ-005 : 배송 시작 일괄 처리
+     */
+    @PostMapping
     public BaseResponse<List<OrderIdResponse>> startShippingForPendingOrders() {
         return BaseResponse.onSuccess(orderService.startShippingForPendingOrders());
     }
