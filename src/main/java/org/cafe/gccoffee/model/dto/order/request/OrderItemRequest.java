@@ -1,4 +1,4 @@
-package org.cafe.gccoffee.model.dto.order;
+package org.cafe.gccoffee.model.dto.order.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderProductEditRequest {
+public class OrderItemRequest {
     private UUID productId;
     private int quantity;
 }

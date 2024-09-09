@@ -8,6 +8,7 @@
         INSERT INTO PRODUCTS(PRODUCT_ID, PRODUCT_NAME, CATEGORY, PRICE, DESCRIPTION, CREATED_AT)
         VALUES (UNHEX(REPLACE(#{id},"-","")), #{productName}, #{category}, #{price}, #{description}, NOW())
     </insert>
+
     <update id="updateProduct" parameterType="org.cafe.gccoffee.model.vo.Product">
         UPDATE PRODUCTS SET PRODUCT_NAME=#{productName}, CATEGORY=#{category}, PRICE=#{price}, DESCRIPTION=#{description}, UPDATED_AT=NOW()
             WHERE PRODUCT_ID=UNHEX(REPLACE(#{id},"-",""))

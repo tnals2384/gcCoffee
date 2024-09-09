@@ -1,8 +1,8 @@
 package org.cafe.gccoffee.model.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.cafe.gccoffee.model.dto.order.OrderIdResponse;
-import org.cafe.gccoffee.model.dto.order.OrderResponse;
+import org.cafe.gccoffee.model.dto.order.response.OrderIdResponse;
+import org.cafe.gccoffee.model.dto.order.response.OrderResponse;
 import org.cafe.gccoffee.model.vo.Order;
 import org.cafe.gccoffee.model.vo.OrderItem;
 

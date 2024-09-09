@@ -47,4 +47,9 @@ public class PageUtils<T> {
         if(page < 0 || size <= 0)
             throw new RuntimeException("잘못된 페이징 요청입니다.");
     }
+
+    public static int calculateOffset(int page, int size) {
+        return page * size;
+    }
+
 }

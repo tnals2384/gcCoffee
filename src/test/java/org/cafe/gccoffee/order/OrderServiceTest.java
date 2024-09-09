@@ -1,8 +1,8 @@
 package org.cafe.gccoffee.order;
 
-import org.cafe.gccoffee.model.dto.order.OrderCreateRequest;
-import org.cafe.gccoffee.model.dto.order.OrderIdResponse;
-import org.cafe.gccoffee.model.dto.order.OrderItemRequest;
+import org.cafe.gccoffee.model.dto.order.request.OrderCreateRequest;
+import org.cafe.gccoffee.model.dto.order.response.OrderIdResponse;
+import org.cafe.gccoffee.model.dto.order.request.OrderItemRequest;
 import org.cafe.gccoffee.model.service.OrderService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

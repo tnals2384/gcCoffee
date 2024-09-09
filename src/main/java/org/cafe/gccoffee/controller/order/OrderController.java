@@ -2,10 +2,10 @@ package org.cafe.gccoffee.controller.order;
 
 
 import lombok.RequiredArgsConstructor;
-import org.cafe.gccoffee.model.dto.order.OrderCreateRequest;
-import org.cafe.gccoffee.model.dto.order.OrderIdResponse;
-import org.cafe.gccoffee.model.dto.order.OrderProductEditRequest;
-import org.cafe.gccoffee.model.dto.order.OrderUserEditRequest;
+import org.cafe.gccoffee.model.dto.order.request.OrderCreateRequest;
+import org.cafe.gccoffee.model.dto.order.response.OrderIdResponse;
+import org.cafe.gccoffee.model.dto.order.request.OrderProductEditRequest;
+import org.cafe.gccoffee.model.dto.order.request.OrderUserEditRequest;
 import org.cafe.gccoffee.model.service.OrderService;
 import org.cafe.gccoffee.common.BaseResponse;
 import org.springframework.web.bind.annotation.*;

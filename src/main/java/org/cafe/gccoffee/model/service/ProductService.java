@@ -22,17 +22,21 @@ public class ProductService {
 
     @Transactional
     public ProductIdResponse createProduct(ProductCreateRequest request) {
-        Product product = Product.productOf(request.getProductName(), request.getCategory(),
-                request.getPrice(), request.getDescription());
+        Product product = Product.productOf(
+                request.getProductName(),
+                request.getCategory(),
+                request.getPrice(),
+                request.getDescription()
+        );
 
         productMapper.insertProduct(product);
-
         return new ProductIdResponse(product.getId());
     }
 
     @Transactional
     public ProductIdResponse updateProduct(UUID productId, ProductCreateRequest request) {
-        getProduct(productId); //해당 product Id가 DB에 있는지 있는지 확인
+        validateProductExists(productId);
+
         Product product = Product.productOf(productId,
                 request.getProductName(),
                 request.getProductName(),
@@ -40,22 +44,21 @@ public class ProductService {
                 request.getDescription());
 
         productMapper.updateProduct(product);
-
-        return new ProductIdResponse(product.getId());
+        return new ProductIdResponse(productId);
     }
 
     @Transactional
     public ProductIdResponse deleteProduct(UUID productId) {
-        Product product = getProduct(productId);
+        validateProductExists(productId);
 
         productMapper.deleteProduct(productId);
-        return new ProductIdResponse(product.getId());
+        return new ProductIdResponse(productId);
     }
 
     public PageUtils<ProductResponse> getProductList(int page, int size) {
         PageUtils.checkPagingRequest(page, size);
+        int offset = PageUtils.calculateOffset(page, size);
 
-        int offset = page * size;
         List<ProductResponse> productList = productMapper.getProductList(offset, size);
         int totalCount = productMapper.getTotalProductCount();
 
@@ -65,8 +68,8 @@ public class ProductService {
 
     public PageUtils<ProductResponse> getProductListWithCategory(String category, int page, int size) {
         PageUtils.checkPagingRequest(page, size);
+        int offset = PageUtils.calculateOffset(page, size);
 
-        int offset = page * size;
         List<ProductResponse> productList = productMapper.getProductListWithCategory(category, offset, size);
         int totalCount = productMapper.getCategoryProductCount(category);
 
@@ -74,8 +77,13 @@ public class ProductService {
     }
 
     public Product getProduct(UUID productId) {
-        return productMapper.getProduct(productId).orElseThrow(
-                () -> new RuntimeException("Product를 찾을 수 없습니다."));
+        return productMapper.getProduct(productId)
+                .orElseThrow(() -> new RuntimeException("Product를 찾을 수 없습니다."));
     }
 
+    private void validateProductExists(UUID productId) {
+        if (productMapper.getProduct(productId).isEmpty()) {
+            throw new RuntimeException("Product not found with id: " + productId);
+        }
+    }
 }

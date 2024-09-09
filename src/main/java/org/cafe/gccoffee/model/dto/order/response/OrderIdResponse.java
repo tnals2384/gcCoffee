@@ -1,4 +1,4 @@
-package org.cafe.gccoffee.model.dto.order;
+package org.cafe.gccoffee.model.dto.order.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

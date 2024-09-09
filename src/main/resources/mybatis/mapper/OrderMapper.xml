@@ -15,7 +15,7 @@
         VALUES (UNHEX(REPLACE(#{orderId},"-","")),UNHEX(REPLACE(#{productId},"-","")), #{category}, #{price}, #{quantity}, NOW())
     </insert>
 
-    <select id="getOrderList" resultType="org.cafe.gccoffee.model.dto.order.OrderResponse">
+    <select id="getOrderList" resultType="org.cafe.gccoffee.model.dto.order.response.OrderResponse">
         SELECT BIN_TO_UUID(O.ORDER_ID) as id,
                O.EMAIL,
                O.ADDRESS,
@@ -37,7 +37,7 @@
         SELECT COUNT(*) FROM ORDERS
     </select>
 
-    <select id="getPendingOrderIdList" resultType="org.cafe.gccoffee.model.dto.order.OrderIdResponse">
+    <select id="getPendingOrderIdList" resultType="org.cafe.gccoffee.model.dto.order.response.OrderIdResponse">
         SELECT BIN_TO_UUID(ORDER_ID) as orderId FROM ORDERS
         WHERE ORDER_STATUS = 'PENDING' AND CREATED_AT BETWEEN
             DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%m-%dT14:00:00') AND

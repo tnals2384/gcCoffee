@@ -1,7 +1,12 @@
 package org.cafe.gccoffee.model.service;
 
 import lombok.RequiredArgsConstructor;
-import org.cafe.gccoffee.model.dto.order.*;
+import org.cafe.gccoffee.model.dto.order.request.OrderCreateRequest;
+import org.cafe.gccoffee.model.dto.order.request.OrderItemRequest;
+import org.cafe.gccoffee.model.dto.order.request.OrderProductEditRequest;
+import org.cafe.gccoffee.model.dto.order.request.OrderUserEditRequest;
+import org.cafe.gccoffee.model.dto.order.response.OrderIdResponse;
+import org.cafe.gccoffee.model.dto.order.response.OrderResponse;
 import org.cafe.gccoffee.model.mapper.OrderMapper;
 import org.cafe.gccoffee.model.vo.Order;
 import org.cafe.gccoffee.model.vo.OrderItem;
@@ -22,38 +27,40 @@ public class OrderService {
 
     @Transactional
     public OrderIdResponse createOrder(OrderCreateRequest request) {
-
         Order order = Order.orderOf(request.getEmail(), request.getAddress(), request.getPostcode());
-        orderMapper.insertOrder(order);
 
-        createOrderItem(order.getId(), request.getOrderItemList());
+        orderMapper.insertOrder(order);
+        addOrderItems(order.getId(), request.getOrderItemList());
 
         return new OrderIdResponse(order.getId());
 
     }
 
-    private void createOrderItem(UUID orderId, List<OrderItemRequest> list) {
-        for (OrderItemRequest orderItemRequest : list) {
-            Product product = productService.getProduct(orderItemRequest.getProductId());
-            int quantity = orderItemRequest.getQuantity();
-
-            OrderItem orderItem = OrderItem.orderItemOf(
-                    orderId,
-                    product.getId(),
-                    quantity,
-                    product.getCategory(),
-                    product.getPrice()*quantity
-            );
-
-            orderMapper.insertOrderItem(orderItem);
-
+    private void addOrderItems(UUID orderId, List<OrderItemRequest> orderItems) {
+        for (OrderItemRequest itemRequest : orderItems) {
+            addOrderItem(orderId, itemRequest);
         }
+    }
+
+    private void addOrderItem(UUID orderId, OrderItemRequest itemRequest) {
+        Product product = productService.getProduct(itemRequest.getProductId());
+        int quantity = itemRequest.getQuantity();
+
+        OrderItem orderItem = OrderItem.orderItemOf(
+                orderId,
+                product.getId(),
+                quantity,
+                product.getCategory(),
+                product.getPrice() * quantity
+        );
+
+        orderMapper.insertOrderItem(orderItem);
     }
 
     public PageUtils<OrderResponse> getOrderList(int page, int size) {
         PageUtils.checkPagingRequest(page, size);
+        int offset = PageUtils.calculateOffset(page, size);
 
-        int offset = page*size;
         List<OrderResponse> orderList = orderMapper.getOrderList(offset, size);
         int totalCount = orderMapper.getTotalOrderCount();
 
@@ -66,7 +73,6 @@ public class OrderService {
         List<OrderIdResponse> pendingOrderList = orderMapper.getPendingOrderIdList();
 
         orderMapper.startShippingForPendingOrders();
-
         return pendingOrderList;
     }
 
@@ -79,8 +85,6 @@ public class OrderService {
             //2-2. db에 있으면 quantity 수정
             //2-3. db에 있지만 request quantity가 0 이면 orderItem 삭제
         }
-
-
     }
 
     @Transactional
@@ -89,8 +93,8 @@ public class OrderService {
     }
 
     private Order getOrder(UUID orderId) {
-        return orderMapper.getOrder(orderId).orElseThrow(
-                () -> new RuntimeException("Order를 찾을 수 없습니다."));
+        return orderMapper.getOrder(orderId)
+                .orElseThrow(() -> new RuntimeException("Order를 찾을 수 없습니다."));
     }
 
 }
