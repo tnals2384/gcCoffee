@@ -12,13 +12,9 @@ import java.util.UUID;
 public interface ProductMapper {
     Optional<Product> getProduct(UUID productId);
 
-    List<ProductResponse> getProductList(int offset, int size);
+    List<ProductResponse> getProductList(String category, int offset, int size);
 
-    List<ProductResponse> getProductListWithCategory(String category, int offset, int size);
-
-    int getTotalProductCount();
-
-    int getCategoryProductCount(String category);
+    int getTotalProductCount(String category);
 
     void insertProduct(Product product);
 

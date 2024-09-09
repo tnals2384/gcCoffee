@@ -59,26 +59,15 @@ public class ProductService {
     }
 
     //상품 목록 페이징 조회
-    public PageUtils<ProductResponse> getProductList(int page, int size) {
+    public PageUtils<ProductResponse> getProductList(String category, int page, int size) {
         PageUtils.checkPagingRequest(page, size);
         int offset = PageUtils.calculateOffset(page, size);
 
-        List<ProductResponse> productList = productMapper.getProductList(offset, size);
-        int totalCount = productMapper.getTotalProductCount();
+        List<ProductResponse> productList = productMapper.getProductList(category, offset, size);
+        int totalCount = productMapper.getTotalProductCount(category);
 
         return PageUtils.pageUtilsOf(productList, page, size, totalCount);
 
-    }
-
-    //상품 목록 카테고리로 페이징 조회
-    public PageUtils<ProductResponse> getProductListWithCategory(String category, int page, int size) {
-        PageUtils.checkPagingRequest(page, size);
-        int offset = PageUtils.calculateOffset(page, size);
-
-        List<ProductResponse> productList = productMapper.getProductListWithCategory(category, offset, size);
-        int totalCount = productMapper.getCategoryProductCount(category);
-
-        return PageUtils.pageUtilsOf(productList, page, size, totalCount);
     }
 
     public Product getProduct(UUID productId) {
