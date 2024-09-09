@@ -37,4 +37,14 @@ public class Product {
                 .description(description)
                 .build();
     }
+
+    public static Product productOf(UUID productId, String productName, String category, int price, String description) {
+        return Product.builder()
+                .id(productId)
+                .productName(productName)
+                .category(category)
+                .price(price)
+                .description(description)
+                .build();
+    }
 }

@@ -27,7 +27,23 @@ public class ProductService {
         return new ProductIdResponse(product.getId());
     }
 
+    @Transactional
+    public ProductIdResponse updateProduct(UUID productId, ProductCreateRequest request) {
+        getProduct(productId); //해당 product Id가 DB에 있는지 있는지 확인
+        Product product = Product.productOf(productId,
+                            request.getProductName(),
+                            request.getProductName(),
+                            request.getPrice(),
+                            request.getDescription());
+
+        productMapper.updateProduct(product);
+
+        return new ProductIdResponse(product.getId());
+    }
+
+
     public Product getProduct(UUID productId) {
-        return productMapper.getProduct(productId);
+        return productMapper.getProduct(productId).orElseThrow(
+                ()-> new RuntimeException("product를 찾을 수 없습니다."));
     }
 }

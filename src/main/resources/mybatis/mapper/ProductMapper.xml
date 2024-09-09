@@ -4,10 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.cafe.gccoffee.model.mapper.ProductMapper">
-    <insert id="insertProduct" parameterType="org.cafe.gccoffee.model.vo.Product" >
+    <insert id="insertProduct" parameterType="org.cafe.gccoffee.model.vo.Product">
         INSERT INTO PRODUCTS(PRODUCT_ID, PRODUCT_NAME, CATEGORY, PRICE, DESCRIPTION, CREATED_AT)
         VALUES (UNHEX(REPLACE(#{id},"-","")), #{productName}, #{category}, #{price}, #{description}, NOW())
     </insert>
+    <update id="updateProduct" parameterType="org.cafe.gccoffee.model.vo.Product">
+        UPDATE PRODUCTS SET PRODUCT_NAME=#{productName}, CATEGORY=#{category}, PRICE=#{price}, DESCRIPTION=#{description}, UPDATED_AT=NOW()
+            WHERE PRODUCT_ID=#{id}
+
+    </update>
 
     <select id="getProduct" resultType="org.cafe.gccoffee.model.vo.Product">
         SELECT BIN_TO_UUID(PRODUCT_ID) as id,

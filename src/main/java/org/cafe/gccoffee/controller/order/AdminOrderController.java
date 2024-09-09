@@ -1,4 +1,4 @@
-package org.cafe.gccoffee.controller;
+package org.cafe.gccoffee.controller.order;
 
 
 import lombok.RequiredArgsConstructor;

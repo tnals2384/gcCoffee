@@ -1,14 +1,13 @@
-package org.cafe.gccoffee.controller;
+package org.cafe.gccoffee.controller.product;
 
 import lombok.RequiredArgsConstructor;
 import org.cafe.gccoffee.model.dto.product.ProductCreateRequest;
 import org.cafe.gccoffee.model.dto.product.ProductIdResponse;
 import org.cafe.gccoffee.model.service.ProductService;
 import org.cafe.gccoffee.common.BaseResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +18,12 @@ public class AdminProductController {
     @PostMapping()
     public BaseResponse<ProductIdResponse> createProduct(@RequestBody ProductCreateRequest productCreateRequest) {
         return BaseResponse.onSuccess(productService.createProduct(productCreateRequest));
+    }
+
+    @PostMapping("/{productId}")
+    public BaseResponse<ProductIdResponse> createProduct(@PathVariable("productId") UUID productId,
+                                                         @RequestBody ProductCreateRequest productCreateRequest) {
+        return BaseResponse.onSuccess(productService.updateProduct(productId, productCreateRequest));
     }
 
 }
