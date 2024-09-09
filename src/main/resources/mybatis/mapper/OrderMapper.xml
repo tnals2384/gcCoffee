@@ -89,13 +89,13 @@
     <update id="editOrderUser">
         UPDATE ORDERS
         <set>
-            <if test="EMAIL != null and EMAIL != '' and EMAIL != OLDEMAIL">
+            <if test="EMAIL != null and EMAIL != ''">
                 EMAIL = #{email},
             </if>
-            <if test="ADDRESS != null and ADDRESS != '' and ADDRESS != OLDADDRESS">
+            <if test="ADDRESS != null and ADDRESS != ''">
                 ADDRESS = #{address},
             </if>
-            <if test="POSTCODE != null and POSTCODE != '' and POSTCODE != OLDPOSTCODE">
+            <if test="POSTCODE != null and POSTCODE != ''">
                 POSTCODE = #{postcode},
             </if>
         </set>

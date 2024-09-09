@@ -11,13 +11,22 @@
 
     <update id="updateProduct" parameterType="org.cafe.gccoffee.model.vo.Product">
         UPDATE PRODUCTS
-        SET PRODUCT_NAME=#{productName},
-            CATEGORY=#{category},
-            PRICE=#{price},
-            DESCRIPTION=#{description},
+        <set>
+            <if test="productName != null and productName != ''">
+                PRODUCT_NAME=#{productName},
+            </if>
+            <if test="category != null and category != ''">
+                CATEGORY=#{category},
+            </if>
+            <if test="price != null and price != ''">
+                PRICE=#{price},
+            </if>
+            <if test="description != null and description != ''">
+                DESCRIPTION=#{description},
+            </if>
             UPDATED_AT=NOW()
+        </set>
         WHERE PRODUCT_ID = UNHEX(REPLACE(#{id}, "-", ""))
-
     </update>
 
     <delete id="deleteProduct" parameterType="java.util.UUID">
@@ -45,6 +54,10 @@
                DESCRIPTION,
                CREATED_AT
         FROM PRODUCTS
+        WHERE
+            <if test="category != null">
+                category = #{category}
+            </if>
         ORDER BY CREATED_AT ASC
             LIMIT #{size}
         OFFSET #{offset}
@@ -53,25 +66,9 @@
     <select id="getTotalProductCount" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM PRODUCTS
-    </select>
-
-    <select id="getProductListWithCategory" resultType="org.cafe.gccoffee.model.dto.product.ProductResponse">
-        SELECT BIN_TO_UUID(PRODUCT_ID) as id,
-               PRODUCT_NAME            as productName,
-               CATEGORY,
-               PRICE,
-               DESCRIPTION,
-               CREATED_AT
-        FROM PRODUCTS
-        WHERE CATEGORY = #{category}
-        ORDER BY CREATED_AT ASC
-            LIMIT #{size}
-        OFFSET #{offset}
-    </select>
-
-    <select id="getCategoryProductCount" resultType="java.lang.Integer">
-        SELECT COUNT(*)
-        FROM PRODUCTS
-        WHERE CATEGORY = #{category}
+        WHERE
+        <if test="category != null">
+            category = #{category}
+        </if>
     </select>
 </mapper>
