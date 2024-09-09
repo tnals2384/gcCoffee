@@ -16,8 +16,6 @@ public class Product {
     private String category;
     private int price;
     private String description;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     @Builder
     private Product(UUID id, String productName, String category, int price, String description) {
@@ -38,7 +36,7 @@ public class Product {
                 .build();
     }
 
-    public static Product productOf(UUID productId, String productName, String category, int price, String description) {
+    public static Product productForUpdate(UUID productId, String productName, String category, int price, String description) {
         return Product.builder()
                 .id(productId)
                 .productName(productName)

@@ -15,8 +15,6 @@ public class Order {
     private String address;
     private String postcode;
     private String orderStatus;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     @Builder
     private Order(UUID id, String email, String address, String postcode) {
@@ -30,6 +28,15 @@ public class Order {
     public static Order orderOf(String email, String address, String postcode) {
         return Order.builder()
                 .id(UUID.randomUUID())
+                .email(email)
+                .address(address)
+                .postcode(postcode)
+                .build();
+    }
+
+    public static Order OrderForUpdate(UUID orderId, String email, String address, String postcode) {
+        return Order.builder()
+                .id(orderId)
                 .email(email)
                 .address(address)
                 .postcode(postcode)

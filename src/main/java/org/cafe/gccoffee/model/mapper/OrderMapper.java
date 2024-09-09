@@ -13,12 +13,28 @@ import java.util.UUID;
 @Mapper
 public interface OrderMapper {
     void insertOrder(Order order);
+
     void insertOrderItem(OrderItem orderItem);
+
     List<OrderResponse> getOrderList(int offset, int size);
+
     int getTotalOrderCount();
+
     List<OrderIdResponse> getPendingOrderIdList();
+
     void startShippingForPendingOrders();
+
     Optional<Order> getOrder(UUID orderId);
+
     Optional<OrderItem> getOrderItem(int orderItemId);
 
+    void editOrderUser(Order order);
+
+    void deleteOrderItemsByOrderId(UUID orderId);
+
+    void deleteOrder(UUID orderId);
+
+    List<OrderResponse> getUserOrderList(String email, int offset, int size);
+
+    int getUserOrderCount(String email);
 }

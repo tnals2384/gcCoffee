@@ -2,7 +2,6 @@ package org.cafe.gccoffee.model.vo;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -16,8 +15,6 @@ public class OrderItem {
     private int quantity;
     private String category;
     private int price;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     @Builder
     private OrderItem(UUID orderId, UUID productId, int quantity, String category, int price) {

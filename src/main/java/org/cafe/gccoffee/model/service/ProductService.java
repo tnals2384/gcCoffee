@@ -39,7 +39,7 @@ public class ProductService {
     public ProductIdResponse updateProduct(UUID productId, ProductCreateRequest request) {
         validateProductExists(productId);
 
-        Product product = Product.productOf(productId,
+        Product product = Product.productForUpdate(productId,
                 request.getProductName(),
                 request.getProductName(),
                 request.getPrice(),
@@ -88,7 +88,7 @@ public class ProductService {
 
     private void validateProductExists(UUID productId) {
         if (productMapper.getProduct(productId).isEmpty()) {
-            throw new RuntimeException("Product not found with id: " + productId);
+            throw new RuntimeException("Product를 찾을 수 없습니다.");
         }
     }
 }

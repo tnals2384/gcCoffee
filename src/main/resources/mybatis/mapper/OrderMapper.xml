@@ -7,48 +7,60 @@
 
     <insert id="insertOrder">
         INSERT INTO ORDERS(ORDER_ID, EMAIL, ADDRESS, POSTCODE, ORDER_STATUS, CREATED_AT)
-        VALUES (UNHEX(REPLACE(#{id},"-","")), #{email}, #{address}, #{postcode}, 'PENDING', NOW())
+        VALUES (UNHEX(REPLACE(#{id}, "-", "")), #{email}, #{address}, #{postcode}, 'PENDING', NOW())
     </insert>
 
     <insert id="insertOrderItem" keyProperty="id" keyColumn="id">
         INSERT INTO ORDER_ITEMS(ORDER_ID, PRODUCT_ID, CATEGORY, PRICE, QUANTITY, CREATED_AT)
-        VALUES (UNHEX(REPLACE(#{orderId},"-","")),UNHEX(REPLACE(#{productId},"-","")), #{category}, #{price}, #{quantity}, NOW())
+        VALUES (UNHEX(REPLACE(#{orderId}, "-", "")), UNHEX(REPLACE(#{productId}, "-", "")), #{category}, #{price},
+                #{quantity}, NOW())
     </insert>
+    <delete id="deleteOrderItemsByOrderId">
+        DELETE
+        FROM ORDER_ITEMS
+        WHERE ORDER_ID = UNHEX(REPLACE(#{orderId}, "-", ""))
+    </delete>
 
-    <select id="getOrderList" resultType="org.cafe.gccoffee.model.dto.order.response.OrderResponse">
+    <select id="getOrderList" resultMap="orderResultMap">
         SELECT BIN_TO_UUID(O.ORDER_ID) as id,
                O.EMAIL,
                O.ADDRESS,
                O.POSTCODE,
-               O.ORDER_STATUS as orderStatus,
-               P.PRODUCT_NAME as productName,
+               O.ORDER_STATUS          as orderStatus,
+               P.PRODUCT_NAME          as productName,
                OI.QUANTITY,
-               OI.PRICE as totalPrice,
-               O.CREATED_AT as createdAt,
-               O.UPDATED_AT as updatedAt
+               OI.PRICE                as totalPrice,
+               O.CREATED_AT            as createdAt,
+               O.UPDATED_AT            as updatedAt
         FROM ORDERS O
-        INNER JOIN ORDER_ITEMS OI ON BIN_TO_UUID(O.ORDER_ID) = BIN_TO_UUID(OI.ORDER_ID)
-        INNER JOIN PRODUCTS P ON BIN_TO_UUID(OI.PRODUCT_ID) = BIN_TO_UUID(P.PRODUCT_ID)
+                 INNER JOIN ORDER_ITEMS OI ON BIN_TO_UUID(O.ORDER_ID) = BIN_TO_UUID(OI.ORDER_ID)
+                 INNER JOIN PRODUCTS P ON BIN_TO_UUID(OI.PRODUCT_ID) = BIN_TO_UUID(P.PRODUCT_ID)
         ORDER BY O.CREATED_AT DESC
-        LIMIT #{size} OFFSET #{offset}
+            LIMIT #{size}
+        OFFSET #{offset}
     </select>
 
     <select id="getTotalOrderCount" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM ORDERS
+        SELECT COUNT(*)
+        FROM ORDERS
     </select>
 
     <select id="getPendingOrderIdList" resultType="org.cafe.gccoffee.model.dto.order.response.OrderIdResponse">
-        SELECT BIN_TO_UUID(ORDER_ID) as orderId FROM ORDERS
-        WHERE ORDER_STATUS = 'PENDING' AND CREATED_AT BETWEEN
+        SELECT BIN_TO_UUID(ORDER_ID) as orderId
+        FROM ORDERS
+        WHERE ORDER_STATUS = 'PENDING'
+          AND CREATED_AT BETWEEN
             DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%m-%dT14:00:00') AND
             DATE_FORMAT(NOW(), '%Y-%m-%dT14:00:00')
     </select>
 
     <update id="startShippingForPendingOrders">
-        UPDATE ORDERS SET ORDER_STATUS = 'SHIPPING' WHERE ORDER_STATUS = 'PENDING'
-                                                      AND CREATED_AT BETWEEN
-                DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%m-%dT14:00:00') AND
-                DATE_FORMAT(NOW(), '%Y-%m-%dT14:00:00')
+        UPDATE ORDERS
+        SET ORDER_STATUS = 'SHIPPING'
+        WHERE ORDER_STATUS = 'PENDING'
+          AND CREATED_AT BETWEEN
+            DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%m-%dT14:00:00') AND
+            DATE_FORMAT(NOW(), '%Y-%m-%dT14:00:00')
 
     </update>
 
@@ -57,18 +69,81 @@
                EMAIL,
                ADDRESS,
                POSTCODE,
-               ORDER_STATUS as orderStatus,
-               CREATED_AT as createdAt,
-               UPDATED_AT as updatedAt
-        FROM ORDERS WHERE ORDER_ID = UNHEX(REPLACE(#{orderId},"-",""))
+               ORDER_STATUS          as orderStatus,
+               CREATED_AT            as createdAt,
+               UPDATED_AT            as updatedAt
+        FROM ORDERS
+        WHERE ORDER_ID = UNHEX(REPLACE(#{orderId}, "-", ""))
     </select>
+
     <select id="getOrderItem" resultType="org.cafe.gccoffee.model.vo.OrderItem">
         SELECT SEQ,
-               ORDER_ID as orderId,
+               ORDER_ID   as orderId,
                PRODUCT_ID as productId,
                PRICE,
                QUANTITY
-        FROM ORDER_ITEMS WHERE seq = #{orderItemId}
-
+        FROM ORDER_ITEMS
+        WHERE seq = #{orderItemId}
     </select>
+
+    <update id="editOrderUser">
+        UPDATE ORDERS
+        <set>
+            <if test="EMAIL != null and EMAIL != '' and EMAIL != OLDEMAIL">
+                EMAIL = #{email},
+            </if>
+            <if test="ADDRESS != null and ADDRESS != '' and ADDRESS != OLDADDRESS">
+                ADDRESS = #{address},
+            </if>
+            <if test="POSTCODE != null and POSTCODE != '' and POSTCODE != OLDPOSTCODE">
+                POSTCODE = #{postcode},
+            </if>
+        </set>
+        WHERE ORDER_ID = UNHEX(REPLACE(#{id},"-",""))
+    </update>
+
+    <delete id="deleteOrder">
+        DELETE
+        FROM ORDERS
+        WHERE ORDER_ID = UNHEX(REPLACE(#{id}, "-", ""))
+    </delete>
+
+    <select id="getUserOrderList" resultMap="orderResultMap">
+        SELECT BIN_TO_UUID(O.ORDER_ID) as id,
+               O.EMAIL,
+               O.ADDRESS,
+               O.POSTCODE,
+               O.ORDER_STATUS          as orderStatus,
+               P.PRODUCT_NAME          as productName,
+               OI.QUANTITY,
+               OI.PRICE                as totalPrice,
+               O.CREATED_AT            as createdAt,
+               O.UPDATED_AT            as updatedAt
+        FROM ORDERS O
+                 INNER JOIN ORDER_ITEMS OI ON BIN_TO_UUID(O.ORDER_ID) = BIN_TO_UUID(OI.ORDER_ID)
+                 INNER JOIN PRODUCTS P ON BIN_TO_UUID(OI.PRODUCT_ID) = BIN_TO_UUID(P.PRODUCT_ID)
+        WHERE EMAIL = #{email}
+        ORDER BY O.CREATED_AT DESC
+    </select>
+
+    <select id="getUserOrderCount" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+        FROM ORDERS
+        WHERE EMAIL = #{email}
+    </select>
+
+    <resultMap id="orderResultMap" type="org.cafe.gccoffee.model.dto.order.response.OrderResponse">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="address" column="address"/>
+        <result property="postcode" column="postcode"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="updatedAt" column="updatedAt"/>
+        <collection property="orderItems" ofType="org.cafe.gccoffee.model.dto.order.response.OrderItemResponse">
+            <result property="productName" column="productName"/>
+            <result property="quantity" column="quantity"/>
+            <result property="totalPrice" column="totalPrice"/>
+        </collection>
+    </resultMap>
 </mapper>
