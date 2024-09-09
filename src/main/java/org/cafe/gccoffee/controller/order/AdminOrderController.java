@@ -4,7 +4,6 @@ package org.cafe.gccoffee.controller.order;
 import lombok.RequiredArgsConstructor;
 import org.cafe.gccoffee.common.BaseResponse;
 import org.cafe.gccoffee.model.dto.order.OrderResponse;
-import org.cafe.gccoffee.model.dto.order.OrderResponsePage;
 import org.cafe.gccoffee.model.service.OrderService;
 import org.cafe.gccoffee.util.PageUtils;
 import org.springframework.web.bind.annotation.GetMapping;

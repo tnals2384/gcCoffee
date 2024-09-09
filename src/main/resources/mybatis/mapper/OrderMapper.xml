@@ -22,7 +22,9 @@
                O.ORDER_STATUS as orderStatus,
                P.PRODUCT_NAME as productName,
                OI.QUANTITY,
-               OI.PRICE as totalPrice
+               OI.PRICE as totalPrice,
+               O.CREATED_AT as createdAt,
+               O.UPDATED_AT as updatedAt
         FROM ORDERS O
         INNER JOIN ORDER_ITEMS OI ON BIN_TO_UUID(O.ORDER_ID) = BIN_TO_UUID(OI.ORDER_ID)
         INNER JOIN PRODUCTS P ON BIN_TO_UUID(OI.PRODUCT_ID) = BIN_TO_UUID(P.PRODUCT_ID)

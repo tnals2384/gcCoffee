@@ -2,7 +2,6 @@ package org.cafe.gccoffee.util;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +9,11 @@ import java.util.List;
 @Getter
 public class PageUtils<T> {
     private List<T> list = new ArrayList<>();
-    private int page;
-    private int totalPages;
-    private int totalElements;
-    private Boolean isFirst;
-    private Boolean isLast;
+    private final int page;
+    private final int totalPages;
+    private final int totalElements;
+    private final Boolean isFirst;
+    private final Boolean isLast;
 
     @Builder
     private PageUtils(List<T> list, int page, int totalPages, int totalElements, Boolean isFirst, Boolean isLast) {
