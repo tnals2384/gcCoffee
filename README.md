@@ -5,6 +5,7 @@ Coffe Bean package를 온라인 웹 사이트로 주문합니다. 매일 전날 
 Spring Boot, Mybatis, MySQL
 Mybatis 사용 방식을 익히기 위한 프로젝트이므로, Mybatis 사용에 목적을 두었습니다.
 로그인 기능 X
+
 ### 기능
 1. RQ-001	관리자	관리자 상품 관리  |	상품 등록
 2. RQ-002	관리자	관리자 상품 관리  |	상품 수정
