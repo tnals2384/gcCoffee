@@ -3,6 +3,21 @@ description: 'Repo에 이슈를 생성하며, 생성된 이슈는 Jira와 연동
 labels: [feat]
 title: '이슈 이름을 작성해주세요'
 body:
+  - type: dropdown
+    id: label-selection
+    attributes:
+      label: '🏷️ 라벨 선택 (Label)'
+      description: '이슈의 성격에 맞는 라벨을 선택해주세요'
+      multiple: false
+      options:
+        - FEAT
+        - FIX
+        - REFACTOR
+        - CHARE
+        
+    validations:
+      required: true
+
   - type: input
     id: parentKey
     attributes:
